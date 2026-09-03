@@ -103,15 +103,15 @@ apk add <包名>
 apk search luci-app-
 ```
 
-编进镜像有两种做法，**不是**只丢进 `packages/` 就行：
+编进镜像有两种做法：
 
-**1. 官方软件源里已有的包（最常见）**  
+**1. 官方软件源里已有的包**  
 改 `configs/packages.list`，一行一个包名。减包在名字前加 `-`。`#` 开头是注释。
 
-**2. 自己下载的第三方 `.apk`**  
-放到仓库 `packages/`，**并且**把包名写进 `configs/packages.list`。构建时会拷进 ImageBuilder。依赖的 `.apk` 也要一起放，版本要匹配 25.12.5 / x86_64。不要用旧的 `.ipk`。
+**2. 不在官方源的 `.apk`（OpenClash、Argon 等）**  
+把 `.apk` 放到仓库 `packages/` 即可，**不必再写进 `packages.list`**。构建脚本会拷进 ImageBuilder、从文件名解析包名，并加入安装列表。请用 OpenWrt 25.12 的 `.apk`，不要用 `.ipk`。依赖包若在官方源，仍写在 `packages.list`。
 
-OpenClash、Argon 不在官方源。`scripts/prepare-custom-feeds.sh` 会在编译时从 GitHub Release 下载 `.apk` 再装进镜像。
+OpenClash、Argon 若 `packages/` 里没有，脚本会再从 GitHub Release 拉一份，避免漏装。
 
 ## Tailscale
 

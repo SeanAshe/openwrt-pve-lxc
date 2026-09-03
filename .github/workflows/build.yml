@@ -48,6 +48,10 @@ jobs:
           set -euo pipefail
           source configs/x86_64.env
           bash scripts/prepare-custom-feeds.sh
+          if [ -s ib/extra-packages.list ]; then
+            PACKAGES="$PACKAGES $(tr '\n' ' ' < ib/extra-packages.list)"
+          fi
+          echo "PACKAGES=$PACKAGES"
           make -C ib image \
             PROFILE="$PROFILE" \
             PACKAGES="$PACKAGES" \

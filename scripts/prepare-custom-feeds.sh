@@ -1,21 +1,40 @@
 #!/usr/bin/env bash
-# Copy extra .apk files into ImageBuilder, including OpenClash and Argon.
+# Copy extra .apk files into ImageBuilder and record their package names
+# so they are actually installed (ImageBuilder only installs PACKAGES=).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 IB="$ROOT/ib"
+EXTRA_LIST="$IB/extra-packages.list"
 
 mkdir -p "$IB/packages"
+: > "$EXTRA_LIST"
 
-if ls "$ROOT/packages/"*.apk >/dev/null 2>&1; then
-	cp "$ROOT/packages/"*.apk "$IB/packages/"
-fi
-
-python3 - "$IB/packages" <<'PY'
-import json, os, ssl, sys, urllib.request
+python3 - "$ROOT/packages" "$IB/packages" "$EXTRA_LIST" <<'PY'
+import json, os, re, ssl, sys, urllib.request
 from pathlib import Path
 
-dest = Path(sys.argv[1])
+src_dir, dest, extra_list = map(Path, sys.argv[1:])
+dest.mkdir(parents=True, exist_ok=True)
+names = []
+
+def pkgname_from_filename(name: str) -> str:
+    stem = name[:-4] if name.lower().endswith(".apk") else name
+    match = re.match(r"^(.+?)[-_][0-9]", stem)
+    return match.group(1) if match else stem
+
+
+def remember(apk: Path) -> None:
+    pkg = pkgname_from_filename(apk.name)
+    names.append(pkg)
+    print(f"Local apk: {apk.name} -> {pkg}")
+
+
+for apk in sorted(src_dir.glob("*.apk")):
+    target = dest / apk.name
+    target.write_bytes(apk.read_bytes())
+    remember(apk)
+
 ctx = ssl.create_default_context()
 headers = {
     "Accept": "application/vnd.github+json",
@@ -48,6 +67,7 @@ def latest_apks(repo, prefixes):
         )
         with urllib.request.urlopen(req, context=ctx, timeout=180) as resp, out.open("wb") as fh:
             fh.write(resp.read())
+        remember(out)
 
 
 latest_apks("vernesong/OpenClash", ["luci-app-openclash-"])
@@ -59,4 +79,11 @@ latest_apks(
         "luci-i18n-argon-config-zh-cn-",
     ],
 )
+
+unique = list(dict.fromkeys(names))
+extra_list.write_text("\n".join(unique) + ("\n" if unique else ""), encoding="utf-8")
+print("Extra packages to install: " + " ".join(unique))
 PY
+
+# Force ImageBuilder to rebuild the local apk index so new files are visible.
+rm -f "$IB/packages/packages.adb"

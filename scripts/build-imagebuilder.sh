@@ -18,6 +18,10 @@ rm -f "$IMAGEBUILDER_ARCHIVE"
 mv openwrt-imagebuilder-* ib
 
 bash "$ROOT/scripts/prepare-custom-feeds.sh"
+if [ -s "$ROOT/ib/extra-packages.list" ]; then
+	PACKAGES="$PACKAGES $(tr '\n' ' ' < "$ROOT/ib/extra-packages.list")"
+fi
+echo "PACKAGES=$PACKAGES"
 
 make -C ib image \
 	PROFILE="$PROFILE" \
