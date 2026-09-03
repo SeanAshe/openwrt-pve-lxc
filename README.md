@@ -137,7 +137,7 @@ files/etc/uci-defaults/            # 首次启动：旁路由单网卡
 files/etc/apk/                     # GuNanOvO Tailscale 公钥与软件源
 packages/                          # 可选本地 apk
 scripts/build-imagebuilder.sh      # 本地 ImageBuilder
-scripts/prepare-custom-feeds.sh    # 本地 apk + Tailscale
+scripts/prepare-custom-feeds.sh    # 拷贝 packages/ 下本地 apk
 scripts/pack-lxc.sh                # 整理成 PVE 模板名
 scripts/pct-create.example.sh      # 宿主机创建容器示例
 .github/workflows/build.yml        # GitHub Actions
