@@ -61,7 +61,7 @@ pct create 100 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc-YYYYMMDD-HHMM.tar.gz 
   --cores 1 \
   --memory 1024 \
   --swap 0 \
-  --rootfs local-lvm:1 \
+  --rootfs local-lvm:4 \
   --features nesting=1 \
   --unprivileged 0 \
   --net0 name=eth0,bridge=vmbr0
@@ -76,7 +76,7 @@ memory: 1024
 net0: name=eth0,bridge=vmbr0,firewall=1,gw=192.167.7.3,hwaddr=BC:24:11:8A:BA:8D,ip=192.168.7.13/24,ip6=dhcp,type=veth
 onboot: 1
 ostype: unmanaged
-rootfs: local-lvm:vm-100-disk-0,size=1G
+rootfs: local-lvm:vm-100-disk-0,size=4G
 startup: order=0
 swap: 0
 tags: base

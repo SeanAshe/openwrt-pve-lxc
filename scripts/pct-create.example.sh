@@ -15,7 +15,7 @@ pct create "$CTID" "$TEMPLATE" \
 	--cores 2 \
 	--memory 256 \
 	--swap 0 \
-	--rootfs "${STORAGE}:1" \
+	--rootfs "${STORAGE}:4" \
 	--features nesting=1 \
 	--unprivileged 0 \
 	--net0 "name=eth0,bridge=${BRIDGE}"
