@@ -56,10 +56,19 @@ uci set system.@system[0].timezone='CST-8'
 uci set luci.main.lang='zh_cn'
 uci set luci.main.mediaurlbase='/luci-static/argon'
 
+uci -q set upnpd.config.enabled='1'
+uci -q set upnpd.config.enable_upnp='1'
+uci -q set upnpd.config.enable_natpmp='1'
+uci -q set upnpd.config.internal_iface='lan'
+uci -q set upnpd.config.external_iface='lan'
+uci -q set upnpd.config.ext_allow_private_ipv4='1'
+uci -q set upnpd.config.igdv1='1'
+
 uci commit network
 uci commit dhcp
 uci commit firewall
 uci commit system
 uci commit luci
+uci commit upnpd
 
 exit 0

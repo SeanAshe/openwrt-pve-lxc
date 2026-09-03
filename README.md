@@ -27,7 +27,7 @@ openwrt-25.12.5-x86-64-pve-lxc.tar.gz.sha256
 | DHCP 服务 | 关闭，避免和主路由抢发地址 |
 | 防火墙 | 单区域全部 ACCEPT，不做 NAT |
 | 时区 | `Asia/Shanghai` / `CST-8` |
-| 软件包 | `luci` `luci-ssl`；**简体中文**；包管理是 **apk**（不是 opkg）；不含 PPP |
+| 软件包 | `luci` `luci-ssl`；**简体中文**；**UPnP**（`miniupnpd-nftables`）；包管理是 **apk**（不是 opkg）；不含 PPP |
 
 把需要走旁路由的设备，网关（和可选 DNS）指到 `192.168.7.3`。LuCI：`https://192.168.7.3/`。
 

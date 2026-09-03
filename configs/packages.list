@@ -35,3 +35,8 @@ luci-compat
 kmod-nft-tproxy
 kmod-tun
 kmod-inet-diag
+
+# UPnP (official 25.12, nftables/fw4)
+miniupnpd-nftables
+luci-app-upnp
+luci-i18n-upnp-zh-cn
