@@ -71,6 +71,17 @@ uci -q set upnpd.config.igdv1='1'
 [ -x /etc/init.d/quickstart ] && /etc/init.d/quickstart enable
 [ -x /etc/init.d/quickstart ] && /etc/init.d/quickstart start
 
+uci -q set argon.@global[0].online_wallpaper='none'
+if [ -f /usr/share/argon-bg.jpg ]; then
+	mkdir -p /www/luci-static/argon/background
+	rm -f /www/luci-static/argon/background/*.jpg \
+		/www/luci-static/argon/background/*.png \
+		/www/luci-static/argon/background/*.gif \
+		/www/luci-static/argon/background/*.webp \
+		/www/luci-static/argon/background/*.mp4
+	cp -f /usr/share/argon-bg.jpg /www/luci-static/argon/background/bg.jpg
+fi
+
 uci commit network
 uci commit dhcp
 uci commit firewall
@@ -78,5 +89,6 @@ uci commit system
 uci commit luci
 uci commit istorex
 uci commit upnpd
+uci -q commit argon
 
 exit 0
