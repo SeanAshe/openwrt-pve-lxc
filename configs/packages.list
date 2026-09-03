@@ -20,3 +20,9 @@ luci-i18n-dashboard-zh-cn
 -kmod-ppp
 -kmod-pppoe
 -kmod-pppox
+
+# Custom
+luci-app-openclash
+luci-theme-argon
+luci-app-argon-config
+luci-i18n-argon-config-zh-cn
