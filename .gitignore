@@ -1,0 +1,6 @@
+/ib/
+/out/
+*.tar.zst
+*.tar.xz
+.DS_Store
+Thumbs.db

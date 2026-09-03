@@ -1,0 +1,71 @@
+#!/bin/sh
+# PVE LXC sidecar router (旁路由), single NIC on eth0.
+# Default: DHCP client so this image does not collide with 192.168.1.1.
+# Switch to static by setting LAN_PROTO=static and the LAN_* values below.
+
+LAN_PROTO="dhcp"
+LAN_IP="192.168.1.2"
+LAN_NETMASK="255.255.255.0"
+LAN_GATEWAY="192.168.1.1"
+LAN_DNS="192.168.1.1"
+
+uci -q delete network.wan
+uci -q delete network.wan6
+
+uci set network.lan.proto="$LAN_PROTO"
+uci -q delete network.lan.ipaddr
+uci -q delete network.lan.netmask
+uci -q delete network.lan.ip6assign
+uci -q delete network.lan.gateway
+uci -q delete network.lan.dns
+uci set network.lan.force_link='1'
+uci set network.lan.ipv6='0'
+uci -q delete network.globals.ula_prefix
+
+if [ "$LAN_PROTO" = "static" ]; then
+	uci set network.lan.ipaddr="$LAN_IP"
+	uci set network.lan.netmask="$LAN_NETMASK"
+	uci set network.lan.gateway="$LAN_GATEWAY"
+	uci set network.lan.dns="$LAN_DNS"
+fi
+
+uci set dhcp.lan.ignore='1'
+uci set dhcp.lan.ra='disabled'
+uci set dhcp.lan.dhcpv6='disabled'
+uci set dhcp.lan.ndp='disabled'
+uci -q delete dhcp.wan
+
+uci set firewall.@defaults[0].input='ACCEPT'
+uci set firewall.@defaults[0].output='ACCEPT'
+uci set firewall.@defaults[0].forward='ACCEPT'
+uci set firewall.@defaults[0].flow_offloading='0'
+
+while uci -q delete firewall.@forwarding[0]; do :; done
+
+i=0
+while [ "$i" -lt 16 ]; do
+	name="$(uci -q get firewall.@zone[$i].name || true)"
+	if [ "$name" = "wan" ]; then
+		uci -q delete firewall.@zone[$i]
+		continue
+	fi
+	if [ "$name" = "lan" ]; then
+		uci set firewall.@zone[$i].input='ACCEPT'
+		uci set firewall.@zone[$i].output='ACCEPT'
+		uci set firewall.@zone[$i].forward='ACCEPT'
+		uci -q delete firewall.@zone[$i].masq
+		uci -q delete firewall.@zone[$i].mtu_fix
+	fi
+	i=$((i + 1))
+done
+
+uci set system.@system[0].hostname='openwrt'
+uci set system.@system[0].zonename='Asia/Shanghai'
+uci set system.@system[0].timezone='CST-8'
+
+uci commit network
+uci commit dhcp
+uci commit firewall
+uci commit system
+
+exit 0

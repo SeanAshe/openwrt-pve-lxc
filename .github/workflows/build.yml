@@ -1,0 +1,81 @@
+name: Build OpenWrt PVE LXC
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_release:
+        description: Create a GitHub Release from this run
+        type: boolean
+        default: true
+  push:
+    branches: [main, master]
+    paths:
+      - configs/**
+      - files/**
+      - packages/**
+      - scripts/**
+      - .github/workflows/**
+
+concurrency:
+  group: build-lxc-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential curl gawk unzip wget python3 \
+            libncurses-dev zlib1g-dev zstd rsync file gettext
+
+      - name: Download ImageBuilder
+        run: |
+          set -euo pipefail
+          source configs/x86_64.env
+          echo "OPENWRT_VERSION=$OPENWRT_VERSION" >> "$GITHUB_ENV"
+          echo "OUTPUT_NAME=$OUTPUT_NAME" >> "$GITHUB_ENV"
+          curl -fsSL -o "$IMAGEBUILDER_ARCHIVE" "${DOWNLOAD_BASE}/${IMAGEBUILDER_ARCHIVE}"
+          echo "${IMAGEBUILDER_SHA256}  ${IMAGEBUILDER_ARCHIVE}" | sha256sum -c -
+          tar --zstd -xf "$IMAGEBUILDER_ARCHIVE"
+          rm -f "$IMAGEBUILDER_ARCHIVE"
+          rm -rf ib
+          mv openwrt-imagebuilder-* ib
+
+      - name: Build rootfs
+        run: |
+          set -euo pipefail
+          source configs/x86_64.env
+          make -C ib image \
+            PROFILE="$PROFILE" \
+            PACKAGES="$PACKAGES" \
+            FILES="$GITHUB_WORKSPACE/files" \
+            EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME"
+
+      - name: Pack PVE template
+        run: bash scripts/pack-lxc.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-pve-lxc
+          path: out/*
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Create GitHub Release
+        if: github.event_name == 'workflow_dispatch' && inputs.create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.OPENWRT_VERSION }}-lxc.${{ github.run_number }}
+          name: OpenWrt ${{ env.OPENWRT_VERSION }} PVE LXC
+          files: out/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true
