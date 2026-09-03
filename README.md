@@ -95,6 +95,8 @@ apk search luci-app-
 **2. 自己下载的第三方 `.apk`**  
 放到仓库 `packages/`，**并且**把包名写进 `configs/packages.list`。构建时会拷进 ImageBuilder。依赖的 `.apk` 也要一起放，版本要匹配 25.12.5 / x86_64。不要用旧的 `.ipk`。
 
+OpenClash、Argon 不在官方 25.12 源里。只写包名会让 ImageBuilder 报 `4 errors`。要编进镜像，把对应 `.apk` 放到 `packages/` 后再取消 `packages.list` 里那几行的注释。
+
 ## Tailscale
 
 镜像只按 [GuNanOvO APK 安装指南](https://gunanovo.github.io/openwrt-tailscale/zh/guide/apk-setup.html) **添加软件源**，不预装软件包：

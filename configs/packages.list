@@ -21,8 +21,9 @@ luci-i18n-dashboard-zh-cn
 -kmod-pppoe
 -kmod-pppox
 
-# Custom
-luci-app-openclash
-luci-theme-argon
-luci-app-argon-config
-luci-i18n-argon-config-zh-cn
+# OpenClash / Argon are not in the official 25.12 feed.
+# Put matching .apk files in packages/ and uncomment these names.
+# luci-app-openclash
+# luci-theme-argon
+# luci-app-argon-config
+# luci-i18n-argon-config-zh-cn
