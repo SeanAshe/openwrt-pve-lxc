@@ -1,0 +1,13 @@
+---
+description: After finishing work, commit and push to origin automatically
+alwaysApply: true
+---
+
+# Auto commit and push
+
+When a task produces project file changes, commit them and `git push` to `origin` on the current branch. Do not wait for a separate commit or upload request.
+
+- Use English commit messages, one or two sentences, focused on why
+- Never force-push, never amend a pushed commit, never skip hooks, never update git config
+- Do not commit secrets (`.env`, credentials, keys)
+- If there is nothing to commit, skip

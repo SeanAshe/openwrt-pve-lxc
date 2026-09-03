@@ -69,7 +69,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.OPENWRT_VERSION }}-lxc.${{ github.run_number }}
-          name: OpenWrt ${{ env.OPENWRT_VERSION }} PVE LXC
+          name: OpenWrt ${{ env.OPENWRT_VERSION }} PVE LXC ${{ env.BUILD_STAMP }}
           files: out/*
           generate_release_notes: true
           fail_on_unmatched_files: true
