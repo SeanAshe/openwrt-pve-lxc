@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-# Copy extra .apk files into ImageBuilder and record their package names
-# so they are actually installed (ImageBuilder only installs PACKAGES=).
+# Put unofficial .apk files in a separate ImageBuilder repo (packages-extra).
+# Mixing them into ib/packages/ rebuilds the official index and breaks apk.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 IB="$ROOT/ib"
+EXTRA_DIR="$IB/packages-extra"
 EXTRA_LIST="$IB/extra-packages.list"
 
-mkdir -p "$IB/packages"
+mkdir -p "$EXTRA_DIR"
 : > "$EXTRA_LIST"
 
-python3 - "$ROOT/packages" "$IB/packages" "$EXTRA_LIST" <<'PY'
+python3 - "$ROOT/packages" "$EXTRA_DIR" "$EXTRA_LIST" <<'PY'
 import json, os, re, ssl, sys, urllib.request
 from pathlib import Path
 
@@ -25,15 +26,18 @@ def pkgname_from_filename(name: str) -> str:
 
 
 def remember(apk: Path) -> None:
+    if apk.stat().st_size < 1024:
+        raise SystemExit(f"{apk.name} is too small ({apk.stat().st_size} bytes), not a valid apk")
     pkg = pkgname_from_filename(apk.name)
     names.append(pkg)
-    print(f"Local apk: {apk.name} -> {pkg}")
+    print(f"Extra apk: {apk.name} -> {pkg}")
 
 
-for apk in sorted(src_dir.glob("*.apk")):
-    target = dest / apk.name
-    target.write_bytes(apk.read_bytes())
-    remember(apk)
+if src_dir.is_dir():
+    for apk in sorted(src_dir.glob("*.apk")):
+        target = dest / apk.name
+        target.write_bytes(apk.read_bytes())
+        remember(apk)
 
 ctx = ssl.create_default_context()
 headers = {
@@ -53,7 +57,9 @@ def latest_apks(repo, prefixes):
     found = []
     for asset in release["assets"]:
         name = asset["name"]
-        if name.endswith(".apk") and any(name.startswith(p) for p in prefixes):
+        if not name.endswith(".apk"):
+            continue
+        if any(name.startswith(p) for p in prefixes):
             found.append(asset)
     missing = [p for p in prefixes if not any(a["name"].startswith(p) for a in found)]
     if missing:
@@ -85,5 +91,54 @@ extra_list.write_text("\n".join(unique) + ("\n" if unique else ""), encoding="ut
 print("Extra packages to install: " + " ".join(unique))
 PY
 
-# Force ImageBuilder to rebuild the local apk index so new files are visible.
-rm -f "$IB/packages/packages.adb"
+shopt -s nullglob
+extra_apks=("$EXTRA_DIR"/*.apk)
+if [ ${#extra_apks[@]} -eq 0 ]; then
+	echo "No extra apk files"
+	exit 0
+fi
+
+echo "Generating ImageBuilder signing keys"
+make -C "$IB" _check_keys
+
+APK_BIN="$IB/staging_dir/host/bin/apk"
+if [ ! -x "$APK_BIN" ]; then
+	echo "ImageBuilder host apk not found: $APK_BIN" >&2
+	exit 1
+fi
+
+KEY_SEC="$IB/keys/local-private-key.pem"
+if [ ! -s "$KEY_SEC" ]; then
+	echo "Local apk signing key was not created" >&2
+	exit 1
+fi
+
+echo "Indexing extra apks in $EXTRA_DIR"
+(
+	cd "$EXTRA_DIR"
+	"$APK_BIN" mkndx \
+		--keys-dir "$IB/keys" \
+		--sign "$KEY_SEC" \
+		--allow-untrusted \
+		--output packages.adb \
+		*.apk
+)
+
+python3 - "$IB/Makefile" <<'PY'
+from pathlib import Path
+import sys
+
+makefile = Path(sys.argv[1])
+text = makefile.read_text(encoding="utf-8")
+marker = "$(TOPDIR)/packages-extra/packages.adb"
+if marker in text:
+    print("Makefile already has packages-extra repository")
+    raise SystemExit(0)
+
+old = "--repository $(PACKAGE_DIR)/packages.adb"
+new = old + " \\\n\t--repository $(TOPDIR)/packages-extra/packages.adb"
+if old not in text:
+    raise SystemExit("Could not patch ImageBuilder Makefile APK repositories")
+makefile.write_text(text.replace(old, new, 1), encoding="utf-8")
+print("Patched ImageBuilder Makefile to use packages-extra")
+PY

@@ -111,7 +111,7 @@ apk search luci-app-
 **2. 不在官方源的 `.apk`（OpenClash、Argon 等）**  
 把 `.apk` 放到仓库 `packages/` 即可，**不必再写进 `packages.list`**。构建脚本会拷进 ImageBuilder、从文件名解析包名，并加入安装列表。请用 OpenWrt 25.12 的 `.apk`，不要用 `.ipk`。依赖包若在官方源，仍写在 `packages.list`。
 
-OpenClash、Argon 若 `packages/` 里没有，脚本会再从 GitHub Release 拉一份，避免漏装。
+OpenClash、Argon 以及 `packages/` 下的 `.apk` 会放进独立的 `packages-extra` 源再安装，避免破坏 ImageBuilder 自带软件索引。
 
 ## Tailscale
 
