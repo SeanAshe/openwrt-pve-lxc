@@ -3,7 +3,7 @@
 # Adjust CTID, storage, bridge, and the template filename as needed.
 
 CTID="${CTID:-201}"
-TEMPLATE="${TEMPLATE:-local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc.tar.gz}"
+TEMPLATE="${TEMPLATE:-local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc-YYYYMMDD-HHMM.tar.gz}"
 STORAGE="${STORAGE:-local-lvm}"
 BRIDGE="${BRIDGE:-vmbr0}"
 HOSTNAME="${HOSTNAME:-openwrt}"

@@ -33,7 +33,6 @@ jobs:
           set -euo pipefail
           source configs/x86_64.env
           echo "OPENWRT_VERSION=$OPENWRT_VERSION" >> "$GITHUB_ENV"
-          echo "OUTPUT_NAME=$OUTPUT_NAME" >> "$GITHUB_ENV"
           curl -fsSL -o "$IMAGEBUILDER_ARCHIVE" "${DOWNLOAD_BASE}/${IMAGEBUILDER_ARCHIVE}"
           echo "${IMAGEBUILDER_SHA256}  ${IMAGEBUILDER_ARCHIVE}" | sha256sum -c -
           tar --zstd -xf "$IMAGEBUILDER_ARCHIVE"

@@ -11,9 +11,11 @@
 Actions 打出：
 
 ```text
-openwrt-25.12.5-x86-64-pve-lxc.tar.gz
-openwrt-25.12.5-x86-64-pve-lxc.tar.gz.sha256
+openwrt-25.12.5-x86-64-pve-lxc-YYYYMMDD-HHMM.tar.gz
+openwrt-25.12.5-x86-64-pve-lxc-YYYYMMDD-HHMM.tar.gz.sha256
 ```
+
+时间戳为 **Asia/Shanghai**，精确到分钟（例如 `20260903-1850`）。
 
 这是 **rootfs**，不是带内核的 combined 镜像。LXC 用 PVE 宿主内核，不要拿 `*-combined*.img` 去 `pct create`。
 
@@ -52,7 +54,7 @@ bash scripts/build-imagebuilder.sh
 把 tar.gz 放到 `/var/lib/vz/template/cache/`，或在数据存储的 **CT Templates** 里上传。必须用命令行创建（GUI 选不了 `unmanaged`）：
 
 ```bash
-pct create 100 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc.tar.gz \
+pct create 100 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc-YYYYMMDD-HHMM.tar.gz \
   --ostype unmanaged \
   --arch amd64 \
   --hostname Openwrt \
