@@ -45,6 +45,9 @@ jobs:
         run: |
           set -euo pipefail
           source configs/x86_64.env
+          if ls "$GITHUB_WORKSPACE/packages/"*.apk >/dev/null 2>&1; then
+            cp "$GITHUB_WORKSPACE/packages/"*.apk ib/packages/
+          fi
           make -C ib image \
             PROFILE="$PROFILE" \
             PACKAGES="$PACKAGES" \

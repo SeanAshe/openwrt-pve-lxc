@@ -87,7 +87,13 @@ apk add <包名>
 apk search luci-app-
 ```
 
-编进镜像：改 `configs/x86_64.env` 里的 `PACKAGES`，减包在名字前加 `-`。额外 `.apk` 放到 `packages/`。
+编进镜像有两种做法，**不是**只丢进 `packages/` 就行：
+
+**1. 官方软件源里已有的包（最常见）**  
+改 `configs/x86_64.env` 的 `PACKAGES`，例如加上 `luci-app-upnp luci-i18n-upnp-zh-cn`。减包在名字前加 `-`。
+
+**2. 自己下载的第三方 `.apk`**  
+放到仓库 `packages/`，**并且**把包名写进 `PACKAGES`。构建时会拷进 ImageBuilder。依赖的 `.apk` 也要一起放，版本要匹配 25.12.5 / x86_64。不要用旧的 `.ipk`。
 
 LXC **加载不了 OpenWrt 的 kmod**。TPROXY / WireGuard 等要在 **PVE 宿主机** 装模块，例如：
 

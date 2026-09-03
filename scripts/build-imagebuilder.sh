@@ -17,6 +17,10 @@ tar --zstd -xf "$IMAGEBUILDER_ARCHIVE"
 rm -f "$IMAGEBUILDER_ARCHIVE"
 mv openwrt-imagebuilder-* ib
 
+if ls "$ROOT/packages/"*.apk >/dev/null 2>&1; then
+	cp "$ROOT/packages/"*.apk ib/packages/
+fi
+
 make -C ib image \
 	PROFILE="$PROFILE" \
 	PACKAGES="$PACKAGES" \
