@@ -61,4 +61,7 @@ uci commit firewall
 uci commit system
 uci commit luci
 
+[ -x /etc/init.d/tailscale ] && /etc/init.d/tailscale disable
+[ -x /etc/init.d/tailscaled ] && /etc/init.d/tailscaled disable
+
 exit 0

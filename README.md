@@ -97,14 +97,16 @@ apk search luci-app-
 
 ## Tailscale
 
-镜像按 [GuNanOvO APK 安装指南](https://gunanovo.github.io/openwrt-tailscale/zh/guide/apk-setup.html) 预装精简 Tailscale，并写入：
+镜像按 [GuNanOvO APK 安装指南](https://gunanovo.github.io/openwrt-tailscale/zh/guide/apk-setup.html) **预装**精简 Tailscale，**默认不启动、不开机自启**。并写入：
 
 - 公钥：`/etc/apk/keys/gunanovo@github.io.pub`
 - 软件源：`/etc/apk/repositories.d/customfeeds.list`（x86_64）
 
-容器起来后登录：
+需要用时再开：
 
 ```sh
+/etc/init.d/tailscale enable
+/etc/init.d/tailscale start
 tailscale up --accept-dns=false --hostname=openwrt
 ```
 
