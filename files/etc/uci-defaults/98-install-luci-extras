@@ -1,0 +1,16 @@
+#!/bin/sh
+# Install GitHub OpenClash / Argon apks that were copied into the image.
+# Runs on first boot so ImageBuilder never touches unofficial packages.
+
+EXTRAS="/root/luci-extras"
+[ -d "$EXTRAS" ] || exit 0
+
+set -- "$EXTRAS"/*.apk
+[ -f "$1" ] || {
+	rmdir "$EXTRAS" 2>/dev/null || true
+	exit 0
+}
+
+apk add -q --force-overwrite --clean-protected --allow-untrusted --no-network "$@" || exit 1
+rm -rf "$EXTRAS"
+exit 0

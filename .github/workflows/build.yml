@@ -47,16 +47,11 @@ jobs:
         run: |
           set -euo pipefail
           source configs/x86_64.env
-          bash scripts/prepare-custom-feeds.sh
-          if [ -s ib/extra-packages.list ]; then
-            PACKAGES="$PACKAGES $(tr '\n' ' ' < ib/extra-packages.list)"
-          fi
-          echo "PACKAGES=$PACKAGES"
+          bash scripts/download-luci-extras.sh
           make -C ib image \
             PROFILE="$PROFILE" \
             PACKAGES="$PACKAGES" \
             FILES="$GITHUB_WORKSPACE/files" \
-            ADD_LOCAL_KEY=1 \
             EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME"
 
       - name: Pack PVE template

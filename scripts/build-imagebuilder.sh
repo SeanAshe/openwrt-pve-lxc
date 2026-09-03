@@ -17,17 +17,12 @@ tar --zstd -xf "$IMAGEBUILDER_ARCHIVE"
 rm -f "$IMAGEBUILDER_ARCHIVE"
 mv openwrt-imagebuilder-* ib
 
-bash "$ROOT/scripts/prepare-custom-feeds.sh"
-if [ -s "$ROOT/ib/extra-packages.list" ]; then
-	PACKAGES="$PACKAGES $(tr '\n' ' ' < "$ROOT/ib/extra-packages.list")"
-fi
-echo "PACKAGES=$PACKAGES"
+bash "$ROOT/scripts/download-luci-extras.sh"
 
 make -C ib image \
 	PROFILE="$PROFILE" \
 	PACKAGES="$PACKAGES" \
 	FILES="$ROOT/files" \
-	ADD_LOCAL_KEY=1 \
 	EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME" \
 	BIN_DIR="$ROOT/ib/bin"
 

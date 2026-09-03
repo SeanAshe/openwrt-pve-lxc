@@ -103,15 +103,7 @@ apk add <包名>
 apk search luci-app-
 ```
 
-编进镜像有两种做法：
-
-**1. 官方软件源里已有的包**  
-改 `configs/packages.list`，一行一个包名。减包在名字前加 `-`。`#` 开头是注释。
-
-**2. 不在官方源的 `.apk`（OpenClash、Argon 等）**  
-把 `.apk` 放到仓库 `packages/` 即可，**不必再写进 `packages.list`**。构建脚本会拷进 ImageBuilder、从文件名解析包名，并加入安装列表。请用 OpenWrt 25.12 的 `.apk`，不要用 `.ipk`。依赖包若在官方源，仍写在 `packages.list`。
-
-OpenClash、Argon 以及 `packages/` 下的 `.apk` 会放进独立的 `packages-extra` 源再安装，避免破坏 ImageBuilder 自带软件索引。
+编进镜像：官方包写在 `configs/packages.list`。OpenClash 和 Argon 不在官方源，**不要**放进 ImageBuilder 的 `packages/`。构建时从 GitHub Release 下载 `.apk` 拷进镜像，容器**首次启动**时用官方文档里的 `apk add --allow-untrusted` 安装。
 
 ## Tailscale
 
@@ -150,12 +142,12 @@ modprobe xt_TPROXY
 
 ```text
 configs/x86_64.env                 # 版本、校验和
-configs/packages.list              # 软件包列表（一行一个）
+configs/packages.list              # 官方软件包列表
 files/etc/uci-defaults/            # 首次启动：旁路由单网卡
 files/etc/apk/                     # GuNanOvO Tailscale 公钥与软件源
-packages/                          # 可选本地 apk
 scripts/build-imagebuilder.sh      # 本地 ImageBuilder
-scripts/prepare-custom-feeds.sh    # 拷贝 packages/ 下本地 apk
+scripts/download-luci-extras.sh    # 下载 OpenClash / Argon apk
+files/etc/uci-defaults/98-install-luci-extras  # 首次启动安装上述 apk
 scripts/pack-lxc.sh                # 整理成 PVE 模板名
 scripts/pct-create.example.sh      # 宿主机创建容器示例
 .github/workflows/build.yml        # GitHub Actions

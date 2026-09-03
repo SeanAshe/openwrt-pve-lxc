@@ -1,5 +1,7 @@
 /ib/
 /out/
+/extra-apks/
+/files/root/luci-extras/
 *.tar.zst
 *.tar.xz
 .DS_Store
