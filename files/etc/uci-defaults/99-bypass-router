@@ -55,6 +55,8 @@ uci set system.@system[0].timezone='CST-8'
 
 uci set luci.main.lang='zh_cn'
 uci set luci.main.mediaurlbase='/luci-static/argon'
+uci -q set istorex.@istorex[0].model='router'
+uci -q set istorex.@istorex[0].enabled='1'
 
 uci -q set upnpd.config.enabled='1'
 uci -q set upnpd.config.enable_upnp='1'
@@ -74,6 +76,7 @@ uci commit dhcp
 uci commit firewall
 uci commit system
 uci commit luci
+uci commit istorex
 uci commit upnpd
 
 exit 0

@@ -4,20 +4,10 @@ module("luci.controller.quickstart", package.seeall)
 
 function index()
     if luci.sys.call("pgrep quickstart >/dev/null") == 0 then
-        local uci = require "luci.model.uci".cursor()
         entry({"admin", "quickstart"}, template("quickstart/home")).leaf = true
-        entry({"admin", "network_guide"}, call("networkguide_index"), _("NetworkGuide"), 2)
-        entry({"admin", "network_guide", "pages"}, call("quickstart_index", {index={"admin", "network_guide", "pages"}})).leaf = true
-        if uci:get("quickstart", "main", "wifi_menu") == "1" then
-            entry({"admin", "quickwifi"}, call("quickwifi_index"), _("Wireless"), 3)
-            entry({"admin", "quickwifi", "pages"}, call("quickstart_index", {index={"admin", "quickwifi", "pages"}})).leaf = true
-        end
         if nixio.fs.access("/usr/lib/lua/luci/view/quickstart/main_dev.htm") then
             entry({"admin", "quickstart_dev"}, call("quickstart_dev", {index={"admin", "quickstart_dev"}})).leaf = true
         end
-        entry({"admin", "nas", "raid"}, call("quickstart_index", {index={"admin", "nas"}}), _("RAID"), 10).leaf = true
-        entry({"admin", "nas", "smart"}, call("quickstart_index", {index={"admin", "nas"}}), _("S.M.A.R.T."), 11).leaf = true
-        entry({"admin", "network", "interfaceconfig"}, call("quickstart_index", {index={"admin", "network"}}), _("NetworkPort"), 11).leaf = true
 
         entry({"admin", "nas", "quickstart"}).dependent = false
         entry({"admin", "nas", "quickstart", "auto_setup"}, post("auto_setup"))
