@@ -11,7 +11,9 @@ luci-i18n-base-zh-cn
 luci-i18n-firewall-zh-cn
 luci-i18n-package-manager-zh-cn
 luci-i18n-attendedsysupgrade-zh-cn
-luci-i18n-dashboard-zh-cn
+
+# luci-mod-dashboard is the extra sidebar "主页"
+-luci-mod-dashboard
 
 # Remove PPP
 -ppp
