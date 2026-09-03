@@ -82,6 +82,16 @@ if [ -f /usr/share/argon-bg.jpg ]; then
 	cp -f /usr/share/argon-bg.jpg /www/luci-static/argon/background/bg.jpg
 fi
 
+_argon_css="/www/luci-static/argon/css/cascade.css"
+_login_left="/usr/share/argon-login-left.css"
+if [ -f "$_argon_css" ] && [ -f "$_login_left" ]; then
+	if ! grep -q 'pve-lxc-login-left' "$_argon_css"; then
+		printf '\n/* pve-lxc-login-left */\n' >> "$_argon_css"
+		cat "$_login_left" >> "$_argon_css"
+	fi
+fi
+unset _argon_css _login_left
+
 uci commit network
 uci commit dhcp
 uci commit firewall

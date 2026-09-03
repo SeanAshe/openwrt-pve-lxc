@@ -1,0 +1,22 @@
+/* Pin the Argon login panel to the left so the wallpaper shows on the right. */
+.login-page {
+	display: flex !important;
+	flex-direction: row !important;
+	justify-content: flex-start !important;
+	align-items: stretch !important;
+}
+
+.login-page .login-container {
+	margin: 0 !important;
+	left: 0 !important;
+	right: auto !important;
+	transform: none !important;
+	align-self: stretch !important;
+	position: relative !important;
+}
+
+@media screen and (max-width: 480px) {
+	.login-page .login-container {
+		width: 100% !important;
+	}
+}
