@@ -33,12 +33,11 @@ openwrt-25.12.5-x86-64-pve-lxc.tar.gz.sha256
 
 ## 用 GitHub Actions 编译
 
-1. 把本仓库推到 `main` 或 `master`。
-2. 打开 **Actions**，允许工作流。
-3. 运行 **Build OpenWrt PVE LXC**。
-4. 结束后从 **Artifacts** 或 **Releases** 下载 tar.gz。
+只在手动触发时编译，推送代码不会自动跑。
 
-改 `configs/`、`files/`、`packages/` 或 workflow 推到默认分支也会自动编。
+1. 打开仓库 **Actions** → **Build OpenWrt PVE LXC**。
+2. 点 **Run workflow**。需要发 Release 时勾选 `create_release`（默认已勾选）。
+3. 结束后从 **Artifacts** 或 **Releases** 下载 tar.gz。
 
 本地 Linux / WSL（不要在纯 Windows 上跑）：
 

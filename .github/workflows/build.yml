@@ -7,14 +7,6 @@ on:
         description: Create a GitHub Release from this run
         type: boolean
         default: true
-  push:
-    branches: [main, master]
-    paths:
-      - configs/**
-      - files/**
-      - packages/**
-      - scripts/**
-      - .github/workflows/**
 
 concurrency:
   group: build-lxc-${{ github.ref }}
