@@ -95,6 +95,28 @@ apk search luci-app-
 **2. 自己下载的第三方 `.apk`**  
 放到仓库 `packages/`，**并且**把包名写进 `configs/packages.list`。构建时会拷进 ImageBuilder。依赖的 `.apk` 也要一起放，版本要匹配 25.12.5 / x86_64。不要用旧的 `.ipk`。
 
+## Tailscale
+
+镜像按 [GuNanOvO APK 安装指南](https://gunanovo.github.io/openwrt-tailscale/zh/guide/apk-setup.html) 预装精简 Tailscale，并写入：
+
+- 公钥：`/etc/apk/keys/gunanovo@github.io.pub`
+- 软件源：`/etc/apk/repositories.d/customfeeds.list`（x86_64）
+
+容器起来后登录：
+
+```sh
+tailscale up --accept-dns=false --hostname=openwrt
+```
+
+以后升级：
+
+```sh
+apk update
+apk add tailscale
+```
+
+Tailscale 需要 `/dev/net/tun`。特权容器一般已有；若没有，在 **PVE 宿主机** 执行 `modprobe tun`。
+
 LXC **加载不了 OpenWrt 的 kmod**。TPROXY / WireGuard 等要在 **PVE 宿主机** 装模块，例如：
 
 ```bash
@@ -117,8 +139,10 @@ modprobe xt_TPROXY
 configs/x86_64.env                 # 版本、校验和
 configs/packages.list              # 软件包列表（一行一个）
 files/etc/uci-defaults/            # 首次启动：旁路由单网卡
+files/etc/apk/                     # GuNanOvO Tailscale 公钥与软件源
 packages/                          # 可选本地 apk
 scripts/build-imagebuilder.sh      # 本地 ImageBuilder
+scripts/prepare-custom-feeds.sh    # 本地 apk + Tailscale
 scripts/pack-lxc.sh                # 整理成 PVE 模板名
 scripts/pct-create.example.sh      # 宿主机创建容器示例
 .github/workflows/build.yml        # GitHub Actions

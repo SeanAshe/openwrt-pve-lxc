@@ -17,9 +17,7 @@ tar --zstd -xf "$IMAGEBUILDER_ARCHIVE"
 rm -f "$IMAGEBUILDER_ARCHIVE"
 mv openwrt-imagebuilder-* ib
 
-if ls "$ROOT/packages/"*.apk >/dev/null 2>&1; then
-	cp "$ROOT/packages/"*.apk ib/packages/
-fi
+bash "$ROOT/scripts/prepare-custom-feeds.sh"
 
 make -C ib image \
 	PROFILE="$PROFILE" \

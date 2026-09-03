@@ -26,3 +26,6 @@ luci-app-openclash
 luci-theme-argon
 luci-app-argon-config
 luci-i18n-argon-config-zh-cn
+
+# GuNanOvO Tailscale (apk feed baked into the image)
+tailscale
