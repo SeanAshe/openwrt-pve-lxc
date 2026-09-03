@@ -40,3 +40,7 @@ kmod-inet-diag
 miniupnpd-nftables
 luci-app-upnp
 luci-i18n-upnp-zh-cn
+
+# Lua runtime for iStoreX / QuickStart homepage
+luci-lua-runtime
+coreutils-stty

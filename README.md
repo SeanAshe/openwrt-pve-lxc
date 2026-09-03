@@ -27,7 +27,7 @@ openwrt-25.12.5-x86-64-pve-lxc.tar.gz.sha256
 | DHCP 服务 | 关闭，避免和主路由抢发地址 |
 | 防火墙 | 单区域全部 ACCEPT，不做 NAT |
 | 时区 | `Asia/Shanghai` / `CST-8` |
-| 软件包 | `luci` `luci-ssl`；**简体中文**；**UPnP**（`miniupnpd-nftables`）；包管理是 **apk**（不是 opkg）；不含 PPP |
+| 软件包 | `luci` `luci-ssl`；**简体中文**；**UPnP**；KWRT 风格 **iStoreX 首页**；包管理是 **apk**（不是 opkg）；不含 PPP |
 
 把需要走旁路由的设备，网关（和可选 DNS）指到 `192.168.7.3`。LuCI：`https://192.168.7.3/`。
 
@@ -103,7 +103,7 @@ apk add <包名>
 apk search luci-app-
 ```
 
-编进镜像：官方包写在 `configs/packages.list`。OpenClash 和 Argon 不在官方源，**不要**放进 ImageBuilder 的 `packages/`。构建时从 GitHub Release 下载 `.apk` 拷进镜像，容器**首次启动**时用官方文档里的 `apk add --allow-untrusted` 安装。
+编进镜像：官方包写在 `configs/packages.list`。OpenClash 和 Argon 不在官方源，**不要**放进 ImageBuilder 的 `packages/`。构建时从 GitHub Release 下载 `.apk` 拷进镜像，容器**首次启动**时用官方文档里的 `apk add --allow-untrusted` 安装。KWRT 风格首页（iStoreX / QuickStart）是从现成 rootfs 拷进 `files/` 的，同样不走 ImageBuilder 第三方包。
 
 ## Tailscale
 

@@ -64,6 +64,11 @@ uci -q set upnpd.config.external_iface='lan'
 uci -q set upnpd.config.ext_allow_private_ipv4='1'
 uci -q set upnpd.config.igdv1='1'
 
+[ -x /etc/init.d/tasks ] && /etc/init.d/tasks enable
+[ -x /etc/init.d/tasks ] && /etc/init.d/tasks start
+[ -x /etc/init.d/quickstart ] && /etc/init.d/quickstart enable
+[ -x /etc/init.d/quickstart ] && /etc/init.d/quickstart start
+
 uci commit network
 uci commit dhcp
 uci commit firewall

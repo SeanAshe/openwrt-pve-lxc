@@ -4,3 +4,12 @@
 *.yaml text eol=lf
 *.env text eol=lf
 *.list text eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.svg binary
+*.lmo binary
+*.woff binary
+*.woff2 binary
+/files/usr/sbin/quickstart binary
+/files/usr/libexec/taskd binary
