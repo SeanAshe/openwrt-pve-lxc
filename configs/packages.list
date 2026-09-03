@@ -1,0 +1,22 @@
+# One package per line. Lines starting with # are comments.
+# Prefix with - to remove a default package.
+
+# LuCI
+luci
+luci-ssl
+luci-app-package-manager
+
+# Simplified Chinese
+luci-i18n-base-zh-cn
+luci-i18n-firewall-zh-cn
+luci-i18n-package-manager-zh-cn
+luci-i18n-attendedsysupgrade-zh-cn
+luci-i18n-dashboard-zh-cn
+
+# Remove PPP
+-ppp
+-ppp-mod-pppoe
+-luci-proto-ppp
+-kmod-ppp
+-kmod-pppoe
+-kmod-pppox
