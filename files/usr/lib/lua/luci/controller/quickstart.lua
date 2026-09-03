@@ -4,7 +4,7 @@ module("luci.controller.quickstart", package.seeall)
 
 function index()
     if luci.sys.call("pgrep quickstart >/dev/null") == 0 then
-        entry({"admin", "quickstart"}, template("quickstart/home")).leaf = true
+        entry({"admin", "quickstart"}, template("quickstart/home"), _("首页"), 0).leaf = true
         if nixio.fs.access("/usr/lib/lua/luci/view/quickstart/main_dev.htm") then
             entry({"admin", "quickstart_dev"}, call("quickstart_dev", {index={"admin", "quickstart_dev"}})).leaf = true
         end

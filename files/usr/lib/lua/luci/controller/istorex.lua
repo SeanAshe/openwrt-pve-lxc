@@ -3,7 +3,7 @@ module("luci.controller.istorex", package.seeall)
 
 function index()
     if luci.sys.call("pgrep quickstart >/dev/null") == 0 then
-        entry({"admin", "istorex"}, call("istorex_template"), _("首页"), 0).leaf = true
+        entry({"admin", "istorex"}, call("istorex_template")).leaf = true
         if nixio.fs.access("/usr/lib/lua/luci/view/istorex/main_dev.htm") then
             entry({"admin", "istorex_dev"}, call("istorex_template_dev")).leaf = true
         end
