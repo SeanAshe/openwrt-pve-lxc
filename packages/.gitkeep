@@ -1,1 +1,2 @@
-# Drop extra .ipk files here; ImageBuilder will pick them up from packages/.
+# Drop extra .apk files here; ImageBuilder will pick them up from packages/.
+# OpenWrt 25.12 uses apk, not opkg/.ipk.
