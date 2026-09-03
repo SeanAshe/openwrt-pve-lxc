@@ -52,12 +52,12 @@ bash scripts/build-imagebuilder.sh
 把 tar.gz 放到 `/var/lib/vz/template/cache/`，或在数据存储的 **CT Templates** 里上传。必须用命令行创建（GUI 选不了 `unmanaged`）：
 
 ```bash
-pct create 201 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc.tar.gz \
+pct create 100 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc.tar.gz \
   --ostype unmanaged \
   --arch amd64 \
-  --hostname openwrt \
-  --cores 2 \
-  --memory 256 \
+  --hostname Openwrt \
+  --cores 1 \
+  --memory 1024 \
   --swap 0 \
   --rootfs local-lvm:1 \
   --features nesting=1 \
@@ -65,7 +65,23 @@ pct create 201 local:vztmpl/openwrt-25.12.5-x86-64-pve-lxc.tar.gz \
   --net0 name=eth0,bridge=vmbr0
 ```
 
-`scripts/pct-create.example.sh` 是同一套命令的可改模板。
+```
+arch: amd64
+cores: 1
+features: nesting=1
+hostname: Openwrt
+memory: 1024
+net0: name=eth0,bridge=vmbr0,firewall=1,gw=192.167.7.3,hwaddr=BC:24:11:8A:BA:8D,ip=192.168.7.13/24,ip6=dhcp,type=veth
+onboot: 1
+ostype: unmanaged
+rootfs: local-lvm:vm-100-disk-0,size=1G
+startup: order=0
+swap: 0
+tags: base
+lxc.cgroup2.devices.allow: c 10:200 rwm
+lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file
+lxc.cgroup2.cpuset.cpus: 12
+```
 
 ```bash
 pct start 201
