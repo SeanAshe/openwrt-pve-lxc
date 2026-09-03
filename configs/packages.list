@@ -20,3 +20,24 @@ luci-i18n-dashboard-zh-cn
 -kmod-ppp
 -kmod-pppoe
 -kmod-pppox
+
+# OpenClash (GitHub apk at build time) + nftables deps
+-dnsmasq
+dnsmasq-full
+bash
+curl
+ca-bundle
+ip-full
+ruby
+ruby-yaml
+unzip
+luci-compat
+kmod-nft-tproxy
+kmod-tun
+kmod-inet-diag
+luci-app-openclash
+
+# Argon (GitHub apk at build time)
+luci-theme-argon
+luci-app-argon-config
+luci-i18n-argon-config-zh-cn

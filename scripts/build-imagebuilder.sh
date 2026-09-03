@@ -23,6 +23,7 @@ make -C ib image \
 	PROFILE="$PROFILE" \
 	PACKAGES="$PACKAGES" \
 	FILES="$ROOT/files" \
+	ADD_LOCAL_KEY=1 \
 	EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME" \
 	BIN_DIR="$ROOT/ib/bin"
 

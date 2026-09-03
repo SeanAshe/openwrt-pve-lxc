@@ -42,6 +42,8 @@ jobs:
           mv openwrt-imagebuilder-* ib
 
       - name: Build rootfs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           source configs/x86_64.env
@@ -50,6 +52,7 @@ jobs:
             PROFILE="$PROFILE" \
             PACKAGES="$PACKAGES" \
             FILES="$GITHUB_WORKSPACE/files" \
+            ADD_LOCAL_KEY=1 \
             EXTRA_IMAGE_NAME="$EXTRA_IMAGE_NAME"
 
       - name: Pack PVE template
